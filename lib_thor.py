@@ -1,6 +1,8 @@
 """Shared infrastructure for Thor provisioning: lockfile, debounce, logging,
 adb runner with disconnect detection, backups, atomic writes, state I/O.
 stdlib only."""
+from __future__ import annotations
+
 import atexit
 import contextlib
 import datetime

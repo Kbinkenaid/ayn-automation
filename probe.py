@@ -5,6 +5,8 @@ cached per (serial, android version, security patch).
 Usage: python3 probe.py <serial> [--refresh]
 Prints the probe table; exits 0. capabilities.json written to ~/.thor-provision/.
 """
+from __future__ import annotations
+
 import json
 import subprocess
 import sys
