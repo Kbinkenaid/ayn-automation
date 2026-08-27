@@ -1,0 +1,91 @@
+# === AYN Thor Automation — strict gitignore ===
+# Rule: everything is ignored by default; only allowlisted paths are tracked.
+# This prevents accidental commits of ROMs, APKs, secrets, and personal artifacts.
+
+# Ignore everything
+*
+
+# But allow directories to be traversed
+!*/
+
+# === Source code (tracked) ===
+!.gitignore
+!README.md
+!GUIDE-NOTES.md
+!INSTRUCTIONS.md
+!lib_thor.py
+!thor_library.py
+!ingest_library.py
+!platform_classifier.py
+!platform-map.json
+!emulator_profiles.py
+!probe.py
+!apps.py
+!golden.py
+!fetch_urls.py
+!get_games.py
+!get_psp_homebrew.py
+!make_retroarch_cfg.py
+!prepare_sd.py
+!transcribe.py
+!deploy.sh
+!setup_all.sh
+!add_games.sh
+
+# === thorctl control plane (tracked) ===
+!thorctl.py
+!thorctl_schemas.py
+
+# === Profiles (tracked) ===
+!profiles/
+!profiles/ayn-thor-v1.json
+
+# === Docs (tracked) ===
+!docs/
+!docs/
+
+# === Tests (tracked) ===
+!tests/
+!tests/__init__.py
+!tests/test_*.py
+
+# === Vendor metadata only (NOT vendor/ROMs.zip) ===
+!vendor/
+!vendor/emulation-pack-dual-screen.json
+!vendor/overrides.json
+
+# === Tools (tracked) ===
+!tools/
+!tools/render_architecture_plan.py
+
+# === Transcripts (tracked — public guide content) ===
+!transcripts/
+!transcripts/
+
+# === Never tracked: ROMs, APKs, secrets, large artifacts ===
+sd_card/
+ROMs/
+apks/
+audio_cache/
+.venv/
+venv/
+__pycache__/
+*.pyc
+library/
+*.log
+apps_download.log
+*.bak
+*.partial
+*.thor-partial
+*.tmp
+.env
+*.env
+*.key
+*.pem
+*.p12
+*.keystore
+*.jks
+prod.keys
+title.keys
+*BIOS*
+*firmware*

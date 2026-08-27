@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "platform_aliases": {
+    "gamecube": "gc", "gc": "gc", "nintendo-gamecube": "gc", "wii": "wii", "wiiu": "wiiu", "wii-u": "wiiu", "psp": "psp", "ps2": "ps2", "ps3": "ps3", "psx": "psx", "ps1": "psx", "switch": "switch", "nintendo-switch": "switch", "n3ds": "n3ds", "3ds": "n3ds", "nds": "nds", "ds": "nds"
+  },
+  "extension_platforms": {
+    ".3ds": "n3ds", ".cci": "n3ds", ".cia": "n3ds", ".nds": "nds", ".gb": "gb", ".gbc": "gbc", ".gba": "gba", ".nes": "nes", ".sfc": "snes", ".smc": "snes", ".z64": "n64", ".n64": "n64", ".v64": "n64", ".md": "genesis", ".gen": "genesis", ".gcm": "gc", ".wbfs": "wii", ".wua": "wiiu", ".nsp": "switch", ".xci": "switch", ".cso": "psp"
+  },
+  "ambiguous_extensions": {
+    ".iso": ["psp", "ps2", "ps3", "gc", "wii"], ".rvz": ["gc", "wii"], ".bin": ["psx", "ps2", "genesis", "saturn", "segacd"], ".chd": ["psx", "ps2", "saturn", "dreamcast", "segacd"], ".cue": ["psx", "ps2", "saturn", "segacd"], ".m3u": ["psx", "ps2", "dreamcast", "saturn"]
+  }
+}
