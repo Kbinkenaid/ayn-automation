@@ -138,18 +138,18 @@ def cmd_library(args: argparse.Namespace) -> int:
     target = Path(args.target) if args.target else library.DEFAULT_TARGET
     output = Path(args.output) if args.output else library.DEFAULT_OUTPUT
 
-    argv = [args.command]
+    argv = [args.action]
     if args.source:
         argv += ["--source", str(source)]
     if args.target:
         argv += ["--target", str(target)]
     if args.output:
         argv += ["--output", str(output)]
-    if args.command == "sync" and args.apply:
+    if args.action == "sync" and args.apply:
         argv.append("--apply")
 
     rc = library.main(argv)
-    if rc == 0 and args.command == "scan":
+    if rc == 0 and args.action == "scan":
         manifest_path = output / "canonical-ssd-manifest.json"
         if manifest_path.exists():
             manifest = json.loads(manifest_path.read_text())
@@ -196,7 +196,7 @@ def cmd_profile(args: argparse.Namespace) -> int:
     """Wrap emulator_profiles.py validate/plan."""
     import emulator_profiles as profiles
 
-    argv = [args.command]
+    argv = [args.action]
     if args.profile:
         argv += ["--profile", str(args.profile)]
     if args.serial:
