@@ -18,5 +18,7 @@
   "local_staging_path": "vendor/drivers/turnip_mrpurple_T30-toasted.adpkg.zip",
   "locked_at": "2026-08-28T07:00:00Z",
   "install_policy": "Manual install only — never auto-installed by automation. Side-load onto device, install via Eden GPU Driver Manager (or load into Cemu custom drivers), then record with: thorctl driver attest",
-  "note": "Newer than the guide's T23 reference (guide recorded Apr 2026); validate on device before trusting. Supersedes nothing automatically — device acceptance evidence decides."
+  "note": "Owner decision 2026-08-28: T30 is the selected driver for the Thor setup (supersedes the guide's T23 reference from Apr 2026). Pending on-device acceptance evidence via thorctl driver attest + acceptance run.",
+  "decision": "selected_by_owner",
+  "decision_date": "2026-08-28"
 }
