@@ -9,6 +9,21 @@ class EmulatorProfileTests(unittest.TestCase):
         self.assertIn("eden", p["emulators"])
         self.assertIn("azahar", p["emulators"])
         self.assertIn("retroarch", p["emulators"])
+
+    def test_dualscreen_forks_and_frontend_presence(self):
+        p = profiles.load_profile()
+        # Dual-screen meta picks documented in the profile
+        self.assertIn("CemuDS", p["emulators"]["cemu"]["recommended"].get("dualscreen_fork", ""))
+        self.assertTrue(any("AzaharPlus" in t for t in p["emulators"]["azahar"]["manual"]))
+        # ES-DE entry: paid distribution + Companion staged
+        esde = p["emulators"]["esde"]
+        self.assertIn("paid", esde["recommended"]["distribution"])
+        self.assertIn("companion_apk", esde["recommended"])
+        # Cocoon appearance block: Silk Pod themes are part of audited setup
+        appearance = p["emulators"]["cocoon"]["appearance"]
+        self.assertIn("Silk Pod", appearance["store"])
+        self.assertIn("glass", appearance)
+        self.assertTrue(appearance["manual_tasks"])
     def test_no_serial_never_authorizes_deploy(self):
         report = profiles.plan(profiles.load_profile())
         self.assertFalse(report["plan_ready"])
