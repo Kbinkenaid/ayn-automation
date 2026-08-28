@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "record_type": "driver_supply_lock",
+  "driver_name": "Turnip Adreno Driver T30 (@Mr_Purple_666)",
+  "driver_version": "26.3.0-T30-1.4.359",
+  "package_version": "T30",
+  "vendor": "Mesa",
+  "author": "Mr_Purple_666",
+  "library_name": "vulkan.purple.so",
+  "min_api": 30,
+  "arch": "arm64-v8a",
+  "source": "https://github.com/MrPurple666/purple-turnip/releases/tag/vturnip_mrpurple_T30-toasted.adpkg",
+  "release_published_at": "2026-08-17T12:38:01Z",
+  "sha256": "f65b2d3353fd4aa7190bb5426b94468e99ffea7a58a830bc0c4651db89353227",
+  "size_bytes": 3713730,
+  "package_contents": ["meta.json", "vulkan.purple.so"],
+  "verified_contents": "AdrenoTools package: meta.json + aarch64 ELF shared object only; no executables, no APK",
+  "local_staging_path": "vendor/drivers/turnip_mrpurple_T30-toasted.adpkg.zip",
+  "locked_at": "2026-08-28T07:00:00Z",
+  "install_policy": "Manual install only — never auto-installed by automation. Side-load onto device, install via Eden GPU Driver Manager (or load into Cemu custom drivers), then record with: thorctl driver attest",
+  "note": "Newer than the guide's T23 reference (guide recorded Apr 2026); validate on device before trusting. Supersedes nothing automatically — device acceptance evidence decides."
+}

@@ -53,6 +53,8 @@
 !vendor/
 !vendor/emulation-pack-dual-screen.json
 !vendor/overrides.json
+!vendor/drivers/
+!vendor/drivers/*.lock.json
 
 # === Tools (tracked) ===
 !tools/
