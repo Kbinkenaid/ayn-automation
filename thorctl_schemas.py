@@ -161,11 +161,40 @@ def validate_run_journal(record: dict[str, Any]) -> None:
     _check(_is_str(record["started_at"]), "started_at must be a string")
 
 
+def validate_driver_attestation(record: dict[str, Any]) -> None:
+    """DriverAttestation: manual driver install evidence (e.g. Mr. Purple Turnip).
+
+    Records WHICH driver+version the owner installed in an emulator; it never
+    installs, downloads, or selects a driver.  Secret-checked like all records.
+    """
+    _check(isinstance(record, dict), "record must be a dict")
+    for key in ("schema_version", "emulator", "driver_name", "driver_version",
+                "source", "device_fingerprint", "attested_at"):
+        _check(key in record, f"missing field: {key}")
+    _check(_is_int(record["schema_version"]) and record["schema_version"] == SCHEMA_VERSION,
+           "schema_version must be integer 1")
+    _check(_is_str(record["emulator"]), "emulator must be a non-empty string")
+    _check(_is_str(record["driver_name"]), "driver_name must be a non-empty string")
+    _check(_is_str(record["driver_version"]), "driver_version must be a non-empty string")
+    _check(_is_str(record["source"]), "source must be a non-empty string")
+    _check(_is_str(record["device_fingerprint"]), "device_fingerprint must be a non-empty string")
+    _check(_is_str(record["attested_at"]), "attested_at must be a non-empty string")
+    _check(record["source"] != "auto", "driver source must be a manual human action, never auto")
+    for forbidden in ("password", "token", "credential", "api_key"):
+        _check(forbidden not in json.dumps(record).lower(),
+               f"DriverAttestation must not contain '{forbidden}'")
+
+
 def validate_acceptance_report(record: dict[str, Any]) -> None:
-    """AcceptanceReport: game, platform, app version, renderer, user confirmations."""
+    """AcceptanceReport: game, platform, app version, renderer, GPU driver, user confirmations.
+
+    The gpu_driver fields record WHICH driver passed the launch test, so the
+    compatibility matrix is evidence-based (e.g. "Mr. Purple T23 @ Vulkan").
+    """
     _check(isinstance(record, dict), "record must be a dict")
     for key in ("schema_version", "game", "platform", "app_version",
-                "renderer", "user_confirmations", "accepted", "tested_at"):
+                "renderer", "gpu_driver", "gpu_driver_version",
+                "user_confirmations", "accepted", "tested_at"):
         _check(key in record, f"missing field: {key}")
     _check(_is_int(record["schema_version"]) and record["schema_version"] == SCHEMA_VERSION,
            "schema_version must be integer 1")
@@ -173,6 +202,8 @@ def validate_acceptance_report(record: dict[str, Any]) -> None:
     _check(_is_str(record["platform"]), "platform must be a string")
     _check(_is_str(record["app_version"]), "app_version must be a string")
     _check(_is_str(record["renderer"]), "renderer must be a string")
+    _check(_is_str(record["gpu_driver"]), "gpu_driver must be a string")
+    _check(_is_str(record["gpu_driver_version"]), "gpu_driver_version must be a string")
     _check(isinstance(record["user_confirmations"], list), "user_confirmations must be a list")
     _check(_is_bool(record["accepted"]), "accepted must be a boolean")
     _check(_is_str(record["tested_at"]), "tested_at must be a string")

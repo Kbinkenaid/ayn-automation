@@ -616,6 +616,8 @@ def cmd_acceptance(args: argparse.Namespace) -> int:
         "platform": args.platform or "unspecified",
         "app_version": args.app_version or "unknown",
         "renderer": args.renderer or "unknown",
+        "gpu_driver": args.gpu_driver or "unattested",
+        "gpu_driver_version": args.gpu_driver_version or "unattested",
         "user_confirmations": args.confirmations or [],
         "accepted": args.accepted if args.accepted is not None else False,
         "tested_at": utc(),
@@ -685,6 +687,65 @@ def cmd_report(args: argparse.Namespace) -> int:
     }
     print(json.dumps(report, indent=2))
     return 0
+
+
+# ─── GPU driver attestation ──────────────────────────────────────────
+
+def cmd_driver(args: argparse.Namespace) -> int:
+    """driver.attest: record a manual GPU driver install (e.g. Mr. Purple Turnip).
+    driver check: verify a device's driver attestation covers an emulator."""
+    if args.action == "attest":
+        if not all([args.emulator, args.driver_name, args.driver_version,
+                    args.source, args.fingerprint]):
+            print("error: --emulator --driver-name --driver-version --source "
+                  "--fingerprint are all required for driver attest",
+                  file=sys.stderr)
+            return 2
+        record = {
+            "schema_version": schemas.SCHEMA_VERSION,
+            "emulator": args.emulator,
+            "driver_name": args.driver_name,
+            "driver_version": args.driver_version,
+            "source": args.source,
+            "device_fingerprint": args.fingerprint,
+            "attested_at": utc(),
+        }
+        schemas.validate_driver_attestation(record)
+        name = f"driver-{args.emulator}-{utc().replace(':', '')}"
+        digest = write_record(name, record, schemas.validate_driver_attestation)
+        print(json.dumps({"status": "attested", "digest": digest, **record},
+                         indent=2))
+        return 0
+    elif args.action == "check":
+        if not args.emulator:
+            print("error: --emulator is required for driver check", file=sys.stderr)
+            return 2
+        attested = []
+        for p in sorted(RECORDS.glob("driver-*.json")):
+            rec = json.loads(p.read_text())
+            if rec.get("emulator") == args.emulator:
+                attested.append(rec)
+        if not attested:
+            print(json.dumps({
+                "status": "unattested",
+                "emulator": args.emulator,
+                "reason": "no manual driver attestation on record; "
+                          "install the driver on device, then run 'driver attest'",
+            }, indent=2))
+            return 1
+        latest = attested[-1]
+        print(json.dumps({
+            "status": "attested",
+            "emulator": args.emulator,
+            "driver_name": latest["driver_name"],
+            "driver_version": latest["driver_version"],
+            "attested_at": latest["attested_at"],
+            "attestation_count": len(attested),
+        }, indent=2))
+        return 0
+    else:
+        print(f"unknown driver action: {args.action}", file=sys.stderr)
+        return 2
 
 
 # ─── State commands ──────────────────────────────────────────────────
@@ -796,6 +857,8 @@ def build_parser() -> argparse.ArgumentParser:
     acc.add_argument("--platform", help="platform tested")
     acc.add_argument("--app-version", help="emulator app version")
     acc.add_argument("--renderer", help="renderer used")
+    acc.add_argument("--gpu-driver", help="GPU driver name that passed (e.g. Mr. Purple T23)")
+    acc.add_argument("--gpu-driver-version", help="GPU driver version that passed")
     acc.add_argument("--confirmations", nargs="*", help="user confirmations")
     acc.add_argument("--accepted", action="store_true", help="mark as accepted")
     acc.set_defaults(func=cmd_acceptance)
@@ -809,6 +872,16 @@ def build_parser() -> argparse.ArgumentParser:
     rep = sub.add_parser("report", help="redacted final report")
     rep.add_argument("action", choices=["export"])
     rep.set_defaults(func=cmd_report)
+
+    # driver (GPU driver attestation — manual installs only)
+    drv = sub.add_parser("driver", help="GPU driver attestation (manual installs)")
+    drv.add_argument("action", choices=["attest", "check"])
+    drv.add_argument("--emulator", help="emulator the driver is for (e.g. eden)")
+    drv.add_argument("--driver-name", help="driver name (e.g. Mr. Purple T23)")
+    drv.add_argument("--driver-version", help="driver version string")
+    drv.add_argument("--source", help="where the driver came from (manual source)")
+    drv.add_argument("--fingerprint", help="device build fingerprint")
+    drv.set_defaults(func=cmd_driver)
 
     # state
     st = sub.add_parser("state", help="thorctl state management")

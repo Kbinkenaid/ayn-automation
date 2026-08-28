@@ -362,5 +362,53 @@ class StateManagementTests(unittest.TestCase):
             thorctl.set_state("APPROVED")
 
 
+class DriverAttestationTests(unittest.TestCase):
+    """DriverAttestation: manual GPU driver evidence, never auto-install."""
+
+    def _valid(self):
+        return {
+            "schema_version": 1,
+            "emulator": "eden",
+            "driver_name": "Mr. Purple T23",
+            "driver_version": "v34",
+            "source": "manual: installed via Eden GPU driver manager on device",
+            "device_fingerprint": "ayn/thor/thor:14/UP1A/x",
+            "attested_at": "2026-08-28T00:00:00Z",
+        }
+
+    def test_valid_attestation_passes(self):
+        schemas.validate_driver_attestation(self._valid())
+
+    def test_missing_fields_rejected(self):
+        rec = self._valid()
+        del rec["driver_version"]
+        with self.assertRaises(ValueError):
+            schemas.validate_driver_attestation(rec)
+
+    def test_auto_source_rejected(self):
+        rec = self._valid()
+        rec["source"] = "auto"
+        with self.assertRaises(ValueError):
+            schemas.validate_driver_attestation(rec)
+
+    def test_secrets_rejected(self):
+        rec = self._valid()
+        rec["driver_name"] = "driver with password=abc"
+        with self.assertRaises(ValueError):
+            schemas.validate_driver_attestation(rec)
+
+    def test_acceptance_requires_gpu_driver_fields(self):
+        rec = {
+            "schema_version": 1, "game": "Smash", "platform": "switch",
+            "app_version": "0.2.1", "renderer": "vulkan",
+            "user_confirmations": [], "accepted": True,
+            "tested_at": "now",
+        }
+        with self.assertRaises(ValueError):  # missing gpu_driver fields
+            schemas.validate_acceptance_report(rec)
+        rec.update({"gpu_driver": "Mr. Purple T23", "gpu_driver_version": "v34"})
+        schemas.validate_acceptance_report(rec)
+
+
 if __name__ == "__main__":
     unittest.main()
