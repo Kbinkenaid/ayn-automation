@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "record_type": "retroarch_core_supply_lock",
+  "retroarch_version": "1.22.2 (stable APK staged; cores from nightly buildbot latest)",
+  "arch": "arm64-v8a",
+  "source": "https://buildbot.libretro.com/nightly/android/latest/arm64-v8a/",
+  "downloaded_at": "2026-09-03T19:10:00Z",
+  "cores": {
+    "fbneo_libretro_android.so.zip": "bf425917abd06f045b59d1313998cecb52e45d6525d05fcd0b1acd2486f546ff",
+    "mame2003_plus_libretro_android.so.zip": "61af04bfd4ecb2b2a91d3678fc10d62986b24ce7c614538dad56c0644de22a03",
+    "gambatte_libretro_android.so.zip": "6c70f473e149eaa9c0642f281200ca4b1920696e62121c79f8aaa40de8471d98",
+    "mgba_libretro_android.so.zip": "d65a81d134d6762777708ba421aa5de26aff60b0fad40d7dde86858d014ccea6",
+    "nestopia_libretro_android.so.zip": "ee492f9e5a86af94298316da9a5afa573b147cdf079c6f7b521df688775b2355",
+    "snes9x_libretro_android.so.zip": "1738f8fbc660e74090f2499891fdbf950bd5f91c7bb2e53ef9fdf714e99f4b54",
+    "flycast_libretro_android.so.zip": "85155e60e5bfff55f216d34f82619b9edcd517158ad1c79958b48eb357c52cb2",
+    "genesis_plus_gx_libretro_android.so.zip": "e9314302c7487f9fa5fa767f4e5f794b8b0d976de2e49ea145c427d2c305d6bf",
+    "mednafen_saturn_libretro_android.so.zip": "82ca4bbdacfe5ba2376e4ab827f77bf878049d62306dd6fc3804d2ca833b27e4"
+  },
+  "install_policy": "Manual: on device day, either sideload these zips via RetroArch's 'Install/Restore Core' from the zip file, or use in-app downloader if online. Offline kit makes the in-app download unnecessary.",
+  "naming_notes": "buildbot names: 'nestopia' (not nestopiaue), 'mednafen_saturn' (not beetle_saturn); the profile's core names map accordingly."
+}

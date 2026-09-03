@@ -55,6 +55,8 @@
 !vendor/overrides.json
 !vendor/drivers/
 !vendor/drivers/*.lock.json
+!vendor/retroarch-cores/
+!vendor/retroarch-cores/*.lock.json
 
 # === Tools (tracked) ===
 !tools/
