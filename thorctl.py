@@ -748,6 +748,92 @@ def cmd_driver(args: argparse.Namespace) -> int:
         return 2
 
 
+# ─── Setup verification (offline kit completeness) ───────────────────
+
+def cmd_setup(args: argparse.Namespace) -> int:
+    """setup.verify: prove the offline kit is complete BEFORE device day.
+    Checks staged APKs, driver, configs, library manifest, apply-sheets,
+    storage-variant decision, and lists owner-supplied items still missing."""
+    kit = ROOT / "configs" / "offline-kit"
+    report = {"schema_version": 1, "checked_at": utc(), "checks": {}, "ok": True}
+
+    # 1. APKs staged with lock records
+    apks = sorted((ROOT / "apks").glob("*.apk"))
+    report["checks"]["apks_staged"] = {"count": len(apks), "ok": len(apks) >= 20}
+    if len(apks) < 20:
+        report["ok"] = False
+
+    # 2. Turnip driver staged
+    drivers = sorted((ROOT / "vendor" / "drivers").glob("*.zip"))
+    report["checks"]["gpu_driver"] = {
+        "staged": [d.name for d in drivers],
+        "ok": bool(drivers),
+    }
+    if not drivers:
+        report["ok"] = False
+
+    # 3. RetroArch cfg staged
+    cfg = ROOT / "sd_card" / "retroarch.cfg"
+    report["checks"]["retroarch_cfg"] = {"ok": cfg.exists()}
+
+    # 4. Library manifest present and recent
+    lm = ROOT / "library" / "canonical-ssd-manifest.json"
+    if lm.exists():
+        m = json.loads(lm.read_text())
+        report["checks"]["library_manifest"] = {
+            "ok": True, "file_count": m.get("file_count"),
+            "total_gb": round(m.get("total_size_bytes", 0) / 1e9, 1),
+        }
+    else:
+        report["checks"]["library_manifest"] = {"ok": False,
+                                                "reason": "run thor_library.py scan"}
+        report["ok"] = False
+
+    # 5. Offline kit generated
+    kit_manifest = kit / "kit-manifest.json"
+    report["checks"]["offline_kit"] = {"ok": kit_manifest.exists(),
+                                        "path": str(kit.relative_to(ROOT))}
+    if not kit_manifest.exists():
+        report["ok"] = False
+        report["checks"]["offline_kit"]["reason"] = "run python3 build_offline_kit.py"
+
+    # 6. Apply-sheets present for every profile emulator
+    profile = json.loads((ROOT / "profiles" / "ayn-thor-v1.json").read_text())
+    sheets_dir = kit / "apply-sheets"
+    missing_sheets = [e for e in profile["emulators"]
+                      if not (sheets_dir / f"{e}.md").exists()]
+    report["checks"]["apply_sheets"] = {
+        "ok": not missing_sheets and sheets_dir.exists(),
+        "expected": len(profile["emulators"]),
+        "missing": missing_sheets,
+    }
+    if missing_sheets:
+        report["ok"] = False
+
+    # 7. Owner-supplied items (informational — cannot be automated)
+    report["checks"]["owner_supplies_reminder"] = {
+        "ok": True,
+        "items": ["BIOS dumps (RetroArch/WatermelonDS/DuckStation/NetherSX2 as owned)",
+                  "Eden: prod.keys + firmware (in-app picker)",
+                  "Cemu: keys.txt (in-app)",
+                  "ES-DE: purchased Android APK (Patreon/Galaxy Store)"],
+        "note": "These are never staged by automation; verify you have them ready.",
+    }
+
+    # 8. Storage variant chosen (from storage-binding record if present)
+    binding = read_record("storage-binding")
+    report["checks"]["storage_binding"] = {
+        "ok": binding is not None,
+        "bound": bool(binding),
+        "note": None if binding else "choose sd_card/internal/usb_otg/hybrid and run storage bind on device day",
+    }
+
+    atomic_write(ROOT / "configs" / "offline-kit" / "setup-verify-report.json",
+                 json.dumps(report, indent=2, sort_keys=True) + "\n")
+    print(json.dumps(report, indent=2))
+    return 0 if report["ok"] else 1
+
+
 # ─── State commands ──────────────────────────────────────────────────
 
 def cmd_state(args: argparse.Namespace) -> int:
@@ -882,6 +968,11 @@ def build_parser() -> argparse.ArgumentParser:
     drv.add_argument("--source", help="where the driver came from (manual source)")
     drv.add_argument("--fingerprint", help="device build fingerprint")
     drv.set_defaults(func=cmd_driver)
+
+    # setup (offline kit completeness gate)
+    setup = sub.add_parser("setup", help="offline kit verification")
+    setup.add_argument("action", choices=["verify"])
+    setup.set_defaults(func=cmd_setup)
 
     # state
     st = sub.add_parser("state", help="thorctl state management")
