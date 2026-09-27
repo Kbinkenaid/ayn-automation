@@ -67,9 +67,16 @@ def _is_list_of_str(v: Any) -> bool:
 def validate_device_attestation(record: dict[str, Any]) -> None:
     """DeviceAttestation: serial, model, brand, build fingerprint, patch, time."""
     _check(isinstance(record, dict), "record must be a dict")
-    for key in ("schema_version", "serial", "model", "brand",
-                "build_fingerprint", "patch_level", "discovered_at"):
+    required = ("schema_version", "serial", "model", "brand",
+                "build_fingerprint", "patch_level", "discovered_at")
+    for key in required:
         _check(key in record, f"missing field: {key}")
+    # Build fingerprints routinely contain the string "release-keys".  Secret
+    # protection therefore belongs on field names, not arbitrary metadata
+    # values.  Keep this record deliberately closed to unreviewed fields.
+    allowed = set(required) | {"android_release", "installed_packages"}
+    extra = set(record) - allowed
+    _check(not extra, f"DeviceAttestation contains unsupported fields: {sorted(extra)}")
     _check(_is_int(record["schema_version"]) and record["schema_version"] == SCHEMA_VERSION,
            "schema_version must be integer 1")
     _check(_is_str(record["serial"]), "serial must be a non-empty string")
@@ -78,10 +85,6 @@ def validate_device_attestation(record: dict[str, Any]) -> None:
     _check(_is_str(record["build_fingerprint"]), "build_fingerprint must be a non-empty string")
     _check(_is_str(record["patch_level"]), "patch_level must be a non-empty string")
     _check(_is_str(record["discovered_at"]), "discovered_at must be a non-empty string")
-    # No secrets
-    for forbidden in ("bios", "firmware", "key", "password", "token", "credential"):
-        _check(forbidden not in json.dumps(record).lower(),
-               f"DeviceAttestation must not contain '{forbidden}'")
 
 
 def validate_storage_binding(record: dict[str, Any]) -> None:

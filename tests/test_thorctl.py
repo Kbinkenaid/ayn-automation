@@ -42,6 +42,13 @@ class SchemaValidationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             schemas.validate_device_attestation(rec)
 
+    def test_device_attestation_allows_standard_release_keys_fingerprint(self):
+        rec = {"schema_version": 1, "serial": "abc", "model": "Thor",
+               "brand": "AYN",
+               "build_fingerprint": "AYN/kalama/kalama:13/TQ3A/release-keys",
+               "patch_level": "2026-01", "discovered_at": "now"}
+        schemas.validate_device_attestation(rec)
+
     def test_storage_binding_rejects_invalid_type(self):
         rec = {"schema_version": 1, "storage_type": "usb",
                "rom_root": "/storage/card", "free_space_bytes": 1000,
