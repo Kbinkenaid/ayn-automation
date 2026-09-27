@@ -42,7 +42,9 @@
 
 # === Docs (tracked) ===
 !docs/
-!docs/
+!docs/*.md
+!docs/images/
+!docs/images/*.png
 
 # === Tests (tracked) ===
 !tests/

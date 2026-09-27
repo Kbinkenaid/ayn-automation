@@ -5,6 +5,26 @@ and stages reviewed emulator assets, builds a ROM layout, and produces
 configuration and acceptance materials. It does **not** deploy to a real device
 until a verified explicit-serial deployment adapter exists.
 
+## Goal
+
+Make an AYN Thor feel like a console: keep an owned game library in one
+platform-based `ROMs/` tree, configure the emulators behind it, and present
+the result through a fast, artwork-rich Cocoon home screen.
+
+## Quick start
+
+1. Run `./setup_all.sh --no-deploy` on a Mac to stage apps, a safe ROM layout,
+   homebrew, and emulator configuration.
+2. Add your own legally obtained games with `./add_games.sh ~/my-roms`.
+3. On the Thor, select `Internal storage/ROMs` in Cocoon, enable Smart Folders,
+   then scrape artwork.
+4. Use the first-device acceptance checklist before setting Cocoon as the
+   default launcher.
+
+For the intended console-style visual setup, read
+[the frontend design guide](docs/FRONTEND-DESIGN.md). The project never
+distributes copyrighted games, console BIOS files, firmware, or title keys.
+
 ## Prepare on your Mac
 
 ```zsh
