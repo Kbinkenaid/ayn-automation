@@ -24,8 +24,9 @@ python3 thorctl.py library verify          # proves every hash matches
 python3 thorctl.py profile validate        # should print: "valid", 11 emulators
 ```
 
-Everything (APKs, Turnip T30 driver) is already staged in `apks/` and
-`vendor/drivers/`. Nothing else to prep.
+Everything (APKs and public metadata) is staged in `apks/` and
+`vendor/drivers/`. Owner-supplied BIOS, keys, firmware, games, and GPU-driver
+archives stay outside this repository.
 
 ---
 
@@ -95,23 +96,26 @@ done
 
 ---
 
-## Part 4 — GPU driver: Turnip T30 (5 min, biggest performance win)
+## Part 4 — GPU driver: Apex v2 Ultimate (5 min, biggest Switch fix)
 
-**[DEVICE] 1.** Copy `vendor/drivers/turnip_mrpurple_T30-toasted.adpkg.zip`
-onto the Thor (or download Mr. Purple Turnip in Chrome — T30 is current).
+**[DEVICE] 1.** Obtain the owner-supplied
+`Balemuni_Apex_v2_ULTIMATE_SD8Gen2.zip` archive. It targets the Thor's
+QCS8550/Adreno 740 class. Do not substitute a Universal, Mali, or unrelated
+Snapdragon package.
 
-**[DEVICE] 2.** **Eden**: Settings → GPU Driver Manager → install the T30 zip →
-select it as active.
+**[DEVICE] 2.** **Eden**: Settings → GPU Driver Manager → Install → select the
+ZIP from `Download/` → select **Apex v2 Ultimate SD8 Gen 2** as active → restart
+Eden. The first boot can spend longer compiling shaders.
 
-**[DEVICE] 3.** **Cemu/CemuDS** (optional): Settings → Graphics → Custom
-Drivers → **+** → pick the T30 zip.
+**[DEVICE] 3.** Use the same archive in Dolphin's custom GPU-driver manager
+only if Dolphin needs it; keep the system driver as the fallback.
 
 **[AUTO] 4.** Record it in the audit chain:
 
 ```bash
 python3 thorctl.py driver attest --emulator eden \
-  --driver-name "Turnip T30 MrPurple" \
-  --driver-version "26.3.0-T30-1.4.359" \
+  --driver-name "Balemuni Apex v2 Ultimate SD8Gen2" \
+  --driver-version "Apex-v2" \
   --source "manual: Eden GPU driver manager" \
   --fingerprint "<fingerprint shown by device discover>"
 ```
@@ -133,6 +137,21 @@ Work top to bottom. Full settings live in `profiles/ayn-thor-v1.json`.
 | 7 | **NetherSX2** (PS2) | Your BIOS, OpenGL 2.5x, widescreen patches, verify physical controls |
 | 8 | **Dolphin** (GC/Wii) | SAF folders, OpenGL 3x, compile shaders before play |
 | 9 | **PPSSPP** (PSP) | Data + games folders, 4x |
+
+### BIOS and PS3 firmware (owner-supplied)
+
+Keep BIOS and console firmware in device-only storage. Never add the files to
+this repository or place them in a public release.
+
+| System | Emulator | Device setup |
+|---|---|---|
+| PS2 | NetherSX2 | Import a personally dumped PS2 BIOS in NetherSX2's BIOS picker; keep games in `ROMs/ps2`. One USA or Europe BIOS is normally enough; select another region only when a title requires it. |
+| PS3 | aPS3e | Install the personally obtained official `PS3UPDAT.PUP` through **Install Firmware**, then point the game directory at `ROMs/ps3`. PS3 ISOs must be compatible/decrypted for aPS3e. |
+| Switch | Eden | Import `prod.keys`, optional `title.keys`, and the extracted firmware dump through Eden's setup wizard; keep them in `Switch/keys/` and `Switch/firmware/<version>/`. |
+
+The Thor validation completed with PS2 BIOS import, PS3 firmware installation,
+and Switch keys/firmware available. These are setup facts only; no BIOS,
+firmware, keys, ROM, or app-private data is tracked here.
 
 ### Eden (Switch): first-run order
 
@@ -198,7 +217,7 @@ exit hotkey, orientation/dual-screen. Then:
 ```bash
 python3 thorctl.py acceptance run --game "Super Smash Bros. Ultimate" \
   --platform switch --app-version 0.2.1 --renderer vulkan \
-  --gpu-driver "Turnip T30 MrPurple" --gpu-driver-version "26.3.0-T30-1.4.359" \
+  --gpu-driver "Balemuni Apex v2 Ultimate SD8Gen2" --gpu-driver-version "Apex-v2" \
   --confirmations controls_ok saves_ok exit_ok --accepted
 ```
 
@@ -219,7 +238,7 @@ python3 thorctl.py report export > thor-setup-report.json
 | Thing | Location |
 |---|---|
 | Staged APKs (hash-pinned) | `apks/` |
-| Turnip T30 driver | `vendor/drivers/turnip_mrpurple_T30-toasted.adpkg.zip` |
+| Apex driver (owner-supplied) | `Download/Balemuni_Apex_v2_ULTIMATE_SD8Gen2.zip` on the Thor; intentionally not tracked |
 | App/driver hash records | `~/.thor-provision/thorctl-records/` |
 | Emulator settings reference | `profiles/ayn-thor-v1.json` |
 | Audit trail / reports | `python3 thorctl.py report export` |
@@ -227,6 +246,6 @@ python3 thorctl.py report export > thor-setup-report.json
 ## Troubleshooting quick hits
 
 - **`adb: no devices`** → re-accept the debugging prompt; try a different cable
-- **Low FPS in Switch games** → confirm Eden shows *Turnip T30* as active driver (`driver check --emulator eden`)
+- **Switch black screen or shader exit** → confirm Eden shows *Apex v2 Ultimate SD8 Gen 2* as active, restart Eden, and let the first shader build finish.
 - **ROMs/ROMs nesting** → always `adb push sd_card/ROMs /sdcard/` with **no trailing slash**
 - **Cocoon empty** → mappings are created only after one successful launch per system
