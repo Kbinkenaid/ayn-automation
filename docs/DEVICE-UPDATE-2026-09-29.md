@@ -22,3 +22,35 @@ The repository contains instructions and paths only. It deliberately excludes
 BIOS images, PS3/Switch firmware, title/product keys, ROMs, APKs, and custom
 GPU-driver archives. Supply those from the user's own device dumps or trusted
 official/vendor sources during setup.
+
+## Field notes that prevent common failures
+
+- **No microSD required:** the same layout works on internal storage. Use
+  `/storage/emulated/0/ROMs/<platform>/` and keep keys/firmware in their
+  emulator-specific folders. Do not create a second `ROMs/ROMs` nesting.
+- **ADB recovery:** if `adb devices` reports `ADB server didn't ACK` or an
+  interface-plugin error, run `adb kill-server`, `adb start-server`, reconnect
+  the cable, unlock the Thor, and accept the USB-debugging RSA prompt.
+- **Scoped storage:** Dolphin, Eden, and Cocoon need a one-time Android
+  **Use this folder → Allow** grant for each ROM directory. Copying files alone
+  does not create that grant.
+- **Cocoon duplicates:** a base game, update, and DLC can share one display
+  title. A BOTW or Mario Kart “duplicate” is normally a related content file;
+  remove only a record whose underlying file is missing or zero bytes.
+- **Correct file routing:** PSP uses `.iso`, `.cso`, or `.pbp`; PS2 uses PS2
+  ISOs and must launch in NetherSX2. PPSSPP cannot load a PS2 ISO. 3DS files
+  route to Lime3DS; Switch `.nsp`/`.xci` files route to Eden.
+- **Switch content order:** boot the base title first. Add updates and DLC as
+  Eden external content or installed content; do not launch update/DLC packages
+  as standalone games.
+- **Switch black-screen diagnosis:** if a title builds one shader and returns
+  to Eden, inspect the log before replacing keys. On the Thor, the observed
+  Vulkan `Format=44` errors pointed to renderer/driver compatibility. The
+  Apex v2 Ultimate SD8 Gen 2 driver was imported through Eden's GPU Driver
+  Manager, selected, and Eden was restarted.
+- **BIOS region:** one compatible, personally dumped PS2 BIOS is normally
+  sufficient. USA/EU/Japan BIOS selection is per emulator or title only when a
+  game requires a specific region; it is not a per-game copy operation.
+- **Thermals and first boot:** custom drivers can take longer to compile shaders
+  on first launch. Keep a 60 FPS cap, start at 1x–2x resolution for demanding
+  Switch titles, and let shader compilation finish before judging performance.

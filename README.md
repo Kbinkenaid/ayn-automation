@@ -25,6 +25,13 @@ For the intended console-style visual setup, read
 [the frontend design guide](docs/FRONTEND-DESIGN.md). The project never
 distributes copyrighted games, console BIOS files, firmware, or title keys.
 
+For the verified device-side fixes and troubleshooting notes, read
+[the Thor update record](docs/DEVICE-UPDATE-2026-09-29.md) and the
+[first-time setup guide](docs/FIRST-TIME-SETUP.md). They cover internal
+storage without a microSD card, ADB recovery, scoped-storage approvals,
+Cocoon's base/update/DLC grouping, emulator file routing, PS2/PS3 firmware,
+and Eden's Apex driver workflow.
+
 ## Prepare on your Mac
 
 ```zsh
