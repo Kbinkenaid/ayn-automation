@@ -127,12 +127,39 @@ Work top to bottom. Full settings live in `profiles/ayn-thor-v1.json`.
 | 1 | **RetroArch** | Import `sd_card/retroarch.cfg`, BIOS folder → `ROMs/BIOS`, Vulkan driver, download the cores listed in the profile, verify hotkeys |
 | 2 | **WatermelonDS** (DS) | Point at `ROMs/nds`, OpenGL renderer, 4x, dual preset (internal top / external bottom), test touch |
 | 3 | **Azahar / AzaharPlus** (3DS) | SAF folders, Vulkan, 4x, top/bottom dual layout, Disable Right Eye Render |
-| 4 | **Eden** (Switch) | App-picker for *your* keys/firmware (never automate this), ROM folder, docked mode |
+| 4 | **Eden** (Switch) | Import *your* keys and firmware through Eden's first-run wizard, add the ROM folder, use Vulkan and docked mode |
 | 5 | **CemuDS** (Wii U) | Game folder, keys via app, gamepad screen on bottom, per-game graphics packs |
 | 6 | **DuckStation** (PS1) | Your BIOS, 3x, CRT-Lottes shader, run-ahead 1 frame |
 | 7 | **NetherSX2** (PS2) | Your BIOS, OpenGL 2.5x, widescreen patches, verify physical controls |
 | 8 | **Dolphin** (GC/Wii) | SAF folders, OpenGL 3x, compile shaders before play |
 | 9 | **PPSSPP** (PSP) | Data + games folders, 4x |
+
+### Eden (Switch): first-run order
+
+Keep these three things separate:
+
+| Item | Purpose | Recommended Thor location |
+|---|---|---|
+| `prod.keys` and optional `title.keys` | Lets Eden decrypt owned game content | `Internal storage/Switch/keys/` |
+| Firmware dump (`.nca` files) | Supplies Switch system titles and applets | `Internal storage/Switch/firmware/<version>/` |
+| Base games (`.xci` or `.nsp`) | The games Eden displays and launches | `Internal storage/ROMs/switch/` |
+
+1. Open Eden and finish **Setup Emulator Data**. Choose **Keys**, then select
+   `prod.keys` (and `title.keys` when offered) from `Switch/keys`.
+2. Choose **Firmware**, select the folder containing the extracted `.nca` files
+   from `Switch/firmware/<version>/`, and wait for the success message.
+3. Choose **Games** and grant scoped access to `ROMs/switch` with **Use this
+   folder** then **Allow**. Do not choose the whole Internal storage root.
+4. In Eden settings, use **Vulkan**, leave accuracy at its default until a game
+   needs a per-game adjustment, and enable docked mode for TV-style titles.
+5. Restart Eden. The game grid should show base games. Install updates and DLC
+   through Eden's content installer; do not launch update/DLC `.nsp` files as
+   standalone games.
+
+Eden must complete this wizard even if keys or firmware were copied to Android
+app storage during troubleshooting. The wizard records the app's own storage
+permission and setup state. Never publish, share, or commit keys, firmware,
+BIOS files, game images, or any emulator data directory.
 
 ---
 
