@@ -22,6 +22,7 @@
 !probe.py
 !apps.py
 !golden.py
+!build_offline_kit.py
 !fetch_urls.py
 !get_games.py
 !get_psp_homebrew.py

@@ -68,4 +68,7 @@ is detected, then set the virtual/on-screen controller to **hidden** or
 **opacity 0**. Android emulator settings are app-specific, so the repository
 automates the mapping specification and repeatable apply sheet rather than
 blindly editing private app databases. Verify one game and save the emulator's
-default profile before applying per-game overrides.
+default profile before applying per-game overrides. The generated sheets cover
+RetroArch, Azahar, melonDS, Eden, Dolphin, Cemu/CemuDS, DuckStation,
+NetherSX2, PPSSPP, and aPS3e; Cocoon and ES-DE are frontends and do not need
+console button maps.

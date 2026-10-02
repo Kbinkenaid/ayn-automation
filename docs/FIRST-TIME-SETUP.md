@@ -137,6 +137,7 @@ Work top to bottom. Full settings live in `profiles/ayn-thor-v1.json`.
 | 7 | **NetherSX2** (PS2) | Your BIOS, OpenGL 2.5x, widescreen patches, verify physical controls |
 | 8 | **Dolphin** (GC/Wii) | SAF folders, OpenGL 3x, compile shaders before play |
 | 9 | **PPSSPP** (PSP) | Data + games folders, 4x |
+| 10 | **aPS3e** (PS3) | Install your official `PS3UPDAT.PUP`, select `ROMs/ps3`, apply the PS3 physical profile, hide overlay |
 
 ### BIOS and PS3 firmware (owner-supplied)
 
