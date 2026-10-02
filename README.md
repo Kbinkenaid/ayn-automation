@@ -32,6 +32,28 @@ storage without a microSD card, ADB recovery, scoped-storage approvals,
 Cocoon's base/update/DLC grouping, emulator file routing, PS2/PS3 firmware,
 and Eden's Apex driver workflow.
 
+## Components users must supply
+
+This repository is an automation and documentation kit, not a complete
+ready-to-play image. The following pieces are intentionally missing and must
+be supplied and approved on the device for an end-to-end setup:
+
+- owned ROMs/ISOs/NSPs/XCIs and any required updates or DLC;
+- personally dumped BIOS files for PS1/PS2/DS systems that need them;
+- personally dumped Switch `prod.keys`/`title.keys` and extracted Switch
+  firmware for Eden;
+- the official PS3 `PS3UPDAT.PUP` and compatible PS3 game dumps for aPS3e;
+- Wii U `keys.txt` if Cemu/CemuDS is used;
+- any paid frontend entitlement, such as ES-DE;
+- Android SAF folder grants, emulator first-run choices, and per-emulator
+  controller/overlay confirmation on the Thor;
+- the exact custom GPU-driver ZIP selected for the device (the profile records
+  the tested Apex target but does not redistribute the binary).
+
+Without these items, the scripts can prepare plans and apply sheets but cannot
+finish a lawful, playable configuration by themselves. Never commit these
+files, credentials, or app-private data to a public fork.
+
 ## Prepare on your Mac
 
 ```zsh

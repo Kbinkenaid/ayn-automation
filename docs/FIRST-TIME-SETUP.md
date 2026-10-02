@@ -5,6 +5,14 @@ are run on your Mac with `thorctl`; steps marked **[DEVICE]** are taps on the
 Thor. Nothing installs a driver, key, BIOS, or credential for you — those stay
 manual by design.
 
+> **End-to-end requirement:** the kit does not include protected or paid
+> components. Before device day, confirm that you have your own ROMs, required
+> BIOS files, Switch keys/firmware, official PS3 firmware, optional Wii U keys,
+> the selected GPU-driver ZIP, paid frontend entitlements, and time to approve
+> Android folder grants and emulator controller profiles. The repository can
+> prepare the plan and apply sheets, but those user/device steps remain
+> necessary.
+
 ---
 
 ## Part 0 — Before the Thor arrives (Mac, 15 min)
