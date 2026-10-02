@@ -54,3 +54,18 @@ official/vendor sources during setup.
 - **Thermals and first boot:** custom drivers can take longer to compile shaders
   on first launch. Keep a 60 FPS cap, start at 1x–2x resolution for demanding
   Switch titles, and let shader compilation finish before judging performance.
+
+## Physical controls and touch overlays
+
+The profile now generates controller sections in the offline apply sheets. The
+Thor uses an Xbox-style face-button layout: physical bottom/right/left/top map
+to the console's Cross-or-A, Circle-or-B, Square-or-X, and Triangle-or-Y
+positions as appropriate. Dolphin receives separate GameCube and Wii Classic
+profiles; NetherSX2 receives the PS2 Cross/Circle/Square/Triangle profile.
+
+For each emulator, apply the generated default profile after the Thor gamepad
+is detected, then set the virtual/on-screen controller to **hidden** or
+**opacity 0**. Android emulator settings are app-specific, so the repository
+automates the mapping specification and repeatable apply sheet rather than
+blindly editing private app databases. Verify one game and save the emulator's
+default profile before applying per-game overrides.
